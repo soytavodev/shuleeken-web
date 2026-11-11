@@ -3,17 +3,19 @@ import Base from '../layouts/Base.astro';
 import Marca from '../components/Marca.astro';
 import IconoRed from '../components/IconoRed.astro';
 import { site } from '../data/site';
+
+const [usuario, dominio] = site.contact.email.split('@');
 ---
 
 <Base intro>
   <!-- Inicio: lo primero que ve quien llega desde la bio de una red.
        En el celular, los botones de las redes quedan a la vista sin bajar mucho. -->
-  <section id="inicio" class="relative overflow-hidden pt-24 pb-16 md:flex md:min-h-[100svh] md:items-center md:pt-16">
+  <section id="inicio" class="relative overflow-hidden pt-24 pb-16 md:flex md:min-h-[100svh] md:items-center md:pt-28 md:pb-14">
     <!-- Halo de luz detrás del guerrero (el «acento» de la marca) -->
     <div aria-hidden="true" class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_45%_55%_at_50%_18%,rgb(255_255_255/0.08),transparent_70%)] md:bg-[radial-gradient(ellipse_40%_60%_at_76%_45%,rgb(255_255_255/0.09),transparent_70%)]"></div>
 
     <div class="relative mx-auto grid w-full max-w-6xl gap-10 px-4 md:grid-cols-[1.05fr_1fr] md:items-center md:gap-16">
-      <Marca pieza="guerrero" data-aparece class="brillo mx-auto h-44 w-52 text-light md:order-2 md:h-[30rem] md:w-full" />
+      <Marca pieza="guerrero" data-aparece class="brillo mx-auto h-44 w-52 text-light md:order-2 md:h-[min(30rem,62svh)] md:w-full" />
 
       <div class="md:order-1">
         <h1 class="mx-auto h-6 w-60 text-light md:mx-0 md:h-9 md:w-[22rem]">
@@ -21,7 +23,7 @@ import { site } from '../data/site';
         </h1>
         <p class="mx-auto mt-6 max-w-md text-center text-lg leading-relaxed text-ink md:mx-0 md:text-left">{site.bio}</p>
 
-        <h2 class="etiqueta mt-10 text-center md:text-left" id="redes">Dónde encontrarme</h2>
+        <h2 class="etiqueta mt-10 text-center md:mt-8 md:text-left" id="redes">Dónde encontrarme</h2>
         <ul class="mt-4 grid gap-3">
           {site.redes.map((red) => (
             <li>
@@ -29,7 +31,7 @@ import { site } from '../data/site';
                 href={red.url}
                 target="_blank"
                 rel="noopener"
-                class="group flex items-center gap-4 rounded border border-line bg-soft/60 px-4 py-3.5 transition duration-200 ease-out hover:scale-[1.035] hover:border-light hover:bg-soft hover:shadow-[0_0_28px_rgb(255_255_255/0.16)] focus-visible:scale-[1.035] motion-reduce:hover:scale-100"
+                class="group flex items-center gap-4 rounded border border-line bg-soft/60 px-4 py-3.5 transition duration-200 md:py-3 ease-out hover:scale-[1.035] hover:border-light hover:bg-soft hover:shadow-[0_0_28px_rgb(255_255_255/0.16)] focus-visible:scale-[1.035] motion-reduce:hover:scale-100"
               >
                 <IconoRed red={red.id} class="h-6 w-6 shrink-0 text-light transition duration-200 group-hover:resplandor" />
                 <span class="flex-1 leading-tight">
@@ -44,6 +46,15 @@ import { site } from '../data/site';
             </li>
           ))}
         </ul>
+
+        <!-- Compartir: en el celular abre el menú del teléfono; en la computadora copia el enlace. -->
+        <div class="mt-5 flex items-center justify-center gap-3 md:justify-start" data-compartir hidden>
+          <button type="button" class="inline-flex items-center gap-2 rounded px-2 py-1 text-sm tracking-[0.2em] text-muted uppercase transition hover:text-light hover:resplandor">
+            <svg viewBox="0 0 24 24" class="h-4 w-4" aria-hidden="true"><path d="M12 15V3M7 8l5-5 5 5M5 13v7h14v-7" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
+            Compartir esta página
+          </button>
+          <span class="text-sm text-light" aria-live="polite" data-aviso></span>
+        </div>
       </div>
     </div>
   </section>
@@ -94,10 +105,61 @@ import { site } from '../data/site';
       <p class="etiqueta">Contacto</p>
       <h2 class="titulo mt-4 text-3xl md:text-4xl">¿Una marca o una colaboración?</h2>
       <p class="mt-4 text-muted">Para propuestas, colaboraciones o lo que se te ocurra, escríbeme al correo.</p>
-      <a href={`mailto:${site.contact.email}`} class="mt-8 inline-flex items-center gap-3 rounded bg-light px-6 py-3 font-medium text-paper transition hover:bg-ink hover:shadow-[0_0_28px_rgb(255_255_255/0.25)]">
-        <svg viewBox="0 0 24 24" class="h-5 w-5" aria-hidden="true"><path d="M3 6h18v12H3zM3 7l9 6 9-6" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
-        {site.contact.email}
-      </a>
+      <!-- El correo no aparece entero en el HTML (los robots de spam buscan «algo@algo»):
+           se arma con JavaScript. Sin JavaScript se lee «shuleeken [arroba] gmail.com». -->
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <a href="#contacto" data-correo data-u={usuario} data-d={dominio} class="inline-flex items-center gap-3 rounded bg-light px-6 py-3 font-medium text-paper transition hover:bg-ink hover:shadow-[0_0_28px_rgb(255_255_255/0.25)]">
+          <svg viewBox="0 0 24 24" class="h-5 w-5" aria-hidden="true"><path d="M3 6h18v12H3zM3 7l9 6 9-6" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
+          <span data-correo-texto>{usuario} [arroba] {dominio}</span>
+        </a>
+        <button type="button" data-copiar-correo hidden class="inline-flex items-center gap-2 rounded border border-line px-5 py-3 text-ink transition hover:border-light hover:text-light">
+          <svg viewBox="0 0 24 24" class="h-5 w-5" aria-hidden="true"><path d="M8 8h11v13H8zM5 16H4V3h11v1" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
+          Copiar correo
+        </button>
+      </div>
+      <p class="mt-3 h-5 text-sm text-light" aria-live="polite" data-aviso-correo></p>
     </div>
   </section>
 </Base>
+
+<script>
+  /** Copia un texto y avisa en la zona indicada. Si el navegador no deja copiar, muestra el texto. */
+  async function copiar(texto: string, aviso: Element | null, mensaje: string) {
+    try {
+      await navigator.clipboard.writeText(texto);
+      if (aviso) aviso.textContent = mensaje;
+    } catch {
+      if (aviso) aviso.textContent = `Cópialo a mano: ${texto}`;
+    }
+    window.setTimeout(() => aviso && (aviso.textContent = ''), 4000);
+  }
+
+  // Correo: se arma aquí para que no esté entero en el HTML.
+  const enlace = document.querySelector<HTMLAnchorElement>('[data-correo]');
+  if (enlace) {
+    const correo = `${enlace.dataset.u}@${enlace.dataset.d}`;
+    enlace.href = `mailto:${correo}`;
+    enlace.querySelector('[data-correo-texto]')!.textContent = correo;
+
+    const botonCopiar = document.querySelector<HTMLButtonElement>('[data-copiar-correo]');
+    if (botonCopiar) {
+      botonCopiar.hidden = false;
+      botonCopiar.addEventListener('click', () => copiar(correo, document.querySelector('[data-aviso-correo]'), 'Correo copiado'));
+    }
+  }
+
+  // Compartir: el menú del teléfono si existe; si no, copia el enlace.
+  const compartir = document.querySelector<HTMLElement>('[data-compartir]');
+  if (compartir) {
+    compartir.hidden = false;
+    const aviso = compartir.querySelector('[data-aviso]');
+    compartir.querySelector('button')?.addEventListener('click', async () => {
+      const datos = { title: document.title, text: 'Mira las redes de Shuleeken', url: location.origin + '/' };
+      if (navigator.share) {
+        try { await navigator.share(datos); } catch { /* la persona cerró el menú */ }
+      } else {
+        copiar(datos.url, aviso, 'Enlace copiado');
+      }
+    });
+  }
+</script>

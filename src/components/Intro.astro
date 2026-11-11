@@ -29,8 +29,13 @@ import Marca from './Marca.astro';
   }
 
   if (raiz.classList.contains('con-intro') && velo) {
-    // El velo termina de desvanecerse a los 2,5 s desde que empezó a cargar la página.
-    window.setTimeout(terminar, Math.max(0, 2500 - performance.now()));
+    // Se quita cuando termina de verdad la animación de salida del velo, aunque
+    // la página haya tardado en cargar. Por si el navegador no avisa del final,
+    // hay un plan B a los 5 s.
+    velo.addEventListener('animationend', (e) => {
+      if (e.animationName === 'intro-salir') terminar();
+    });
+    window.setTimeout(terminar, 5000);
     velo.addEventListener('click', terminar);
     window.addEventListener('keydown', terminar, { once: true });
     window.addEventListener('touchstart', terminar, { once: true, passive: true });

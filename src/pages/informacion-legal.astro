@@ -18,7 +18,7 @@ const pending = (value: string | null) => value ?? '[PENDIENTE]';
     <p>{site.legal.taxIdLabel}: {pending(site.legal.taxId)}</p>
     <p>Dirección: {pending(site.legal.address)}</p>
     <p>País: {site.legal.country}</p>
-    {site.contact.email && <p>Correo: {site.contact.email}</p>}
+    {site.contact.email && <p>Correo: {site.contact.email.replace('@', ' [arroba] ')}</p>}
 
     <h2>Datos personales</h2>
     <p>
