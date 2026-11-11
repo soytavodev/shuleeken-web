@@ -1,0 +1,10 @@
+// Despliegue en Cloudflare Workers como web estática (sin adaptador ni servidor).
+// Cambia "name" por el del proyecto: da la dirección provisional <name>.<cuenta>.workers.dev
+{
+  "name": "shuleeken-web",
+  "compatibility_date": "2026-10-21",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}

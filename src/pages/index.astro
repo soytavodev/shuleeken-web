@@ -1,0 +1,104 @@
+---
+import Base from '../layouts/Base.astro';
+import Marca from '../components/Marca.astro';
+import IconoRed from '../components/IconoRed.astro';
+import { site } from '../data/site';
+---
+
+<Base>
+  <!-- Inicio: lo primero que ve quien llega desde la bio de una red.
+       En el celular, los botones de las redes quedan a la vista sin bajar mucho. -->
+  <section id="inicio" class="relative overflow-hidden pt-24 pb-16 md:flex md:min-h-[100svh] md:items-center md:pt-16">
+    <!-- Halo de luz detrás del guerrero (el «acento» de la marca) -->
+    <div aria-hidden="true" class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_45%_55%_at_50%_18%,rgb(255_255_255/0.08),transparent_70%)] md:bg-[radial-gradient(ellipse_40%_60%_at_76%_45%,rgb(255_255_255/0.09),transparent_70%)]"></div>
+
+    <div class="relative mx-auto grid w-full max-w-6xl gap-10 px-4 md:grid-cols-[1.05fr_1fr] md:items-center md:gap-16">
+      <Marca pieza="guerrero" class="brillo mx-auto h-44 w-52 text-light md:order-2 md:h-[30rem] md:w-full" />
+
+      <div class="md:order-1">
+        <h1 class="mx-auto h-6 w-60 text-light md:mx-0 md:h-9 md:w-[22rem]">
+          <Marca pieza="nombre" alt={site.name} class="h-full w-full" />
+        </h1>
+        <p class="mx-auto mt-6 max-w-md text-center text-lg leading-relaxed text-ink md:mx-0 md:text-left">{site.bio}</p>
+
+        <h2 class="etiqueta mt-10 text-center md:text-left" id="redes">Dónde encontrarme</h2>
+        <ul class="mt-4 grid gap-3">
+          {site.redes.map((red) => (
+            <li>
+              <a
+                href={red.url}
+                target="_blank"
+                rel="noopener"
+                class="group flex items-center gap-4 rounded border border-line bg-soft/60 px-4 py-3.5 transition hover:border-light/70 hover:bg-soft hover:shadow-[0_0_24px_rgb(255_255_255/0.08)]"
+              >
+                <IconoRed red={red.id} class="h-6 w-6 shrink-0 text-light" />
+                <span class="flex-1 leading-tight">
+                  <span class="block font-medium text-light">{red.nombre}</span>
+                  <span class="block text-sm text-muted">{red.contenido} · {red.usuario}</span>
+                </span>
+                <svg viewBox="0 0 24 24" class="h-4 w-4 shrink-0 text-muted transition group-hover:translate-x-1 group-hover:text-light" aria-hidden="true">
+                  <path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+                <span class="sr-only">(se abre en otra pestaña)</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  {site.donaciones && (
+    <section id="apoyo" class="border-t border-line py-20">
+      <div class="mx-auto max-w-3xl px-4 text-center">
+        <p class="etiqueta">Apoya el canal</p>
+        <h2 class="titulo mt-4 text-3xl">¿Te sacó una risa?</h2>
+        <p class="mt-4 text-muted">Si quieres que siga haciendo contenido, puedes invitarme a algo.</p>
+        <a href={site.donaciones.url} target="_blank" rel="noopener" class="mt-8 inline-block rounded bg-light px-6 py-3 font-medium text-paper hover:bg-ink">
+          Apoyar en {site.donaciones.nombre}
+        </a>
+      </div>
+    </section>
+  )}
+
+  <section id="sobre-mi" class="border-t border-line py-20 md:py-28">
+    <div class="mx-auto grid max-w-6xl gap-12 px-4 md:grid-cols-[1fr_1.4fr]">
+      <div>
+        <p class="etiqueta">Sobre mí</p>
+        <h2 class="titulo mt-4 text-3xl md:text-4xl">No hace falta ser pro</h2>
+      </div>
+      <div class="space-y-5 text-lg leading-relaxed">
+        <p>
+          Soy Gustavo y en las redes soy Shuleeken. Juego de todo un poco y no soy pro: soy un jugador
+          promedio, como la mayoría de la gente que juega.
+        </p>
+        <p>
+          Antes subía partidas de League of Legends. Ahora vuelvo con una idea clara: demostrar que no
+          hace falta ser el mejor para disfrutar jugando y compartirlo.
+        </p>
+        <p class="text-muted">
+          Aquí vas a encontrar partidas, directos y clips donde se gana poco, se pierde bastante y se ríe siempre.
+        </p>
+        <div class="mt-8 rounded border border-line p-5">
+          <p class="etiqueta">¿Por qué Shuleeken?</p>
+          <p class="mt-3 text-base text-muted">
+            Sale de una escena de <i>Naruto</i> en la que Naruto lanza a Rock Lee con el viento como si fuera
+            un shuriken: el «Shu-Lee-ken». Se dice <span class="text-light">shu-LÍ-ken</span>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contacto" class="border-t border-line py-20 md:py-28">
+    <div class="mx-auto max-w-3xl px-4 text-center">
+      <p class="etiqueta">Contacto</p>
+      <h2 class="titulo mt-4 text-3xl md:text-4xl">¿Una marca o una colaboración?</h2>
+      <p class="mt-4 text-muted">Para propuestas, colaboraciones o lo que se te ocurra, escríbeme al correo.</p>
+      <a href={`mailto:${site.contact.email}`} class="mt-8 inline-flex items-center gap-3 rounded bg-light px-6 py-3 font-medium text-paper transition hover:bg-ink hover:shadow-[0_0_28px_rgb(255_255_255/0.25)]">
+        <svg viewBox="0 0 24 24" class="h-5 w-5" aria-hidden="true"><path d="M3 6h18v12H3zM3 7l9 6 9-6" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
+        {site.contact.email}
+      </a>
+    </div>
+  </section>
+</Base>

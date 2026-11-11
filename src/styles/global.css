@@ -1,0 +1,57 @@
+@import 'tailwindcss';
+
+/* Tokens de la marca Shuleeken (ver el manual de identidad).
+   Solo blanco, negro y grises: el acento es la luz (el brillo blanco).
+   Contraste comprobado sobre el fondo negro (#0a0a0a):
+   texto #dfdfdf ≈ 15:1 · secundario #a2a2a2 ≈ 8:1 (los dos pasan AA). */
+@theme {
+  --font-sans: 'Saira Variable', system-ui, sans-serif;
+
+  --color-paper: #0a0a0a;    /* Negro: fondo */
+  --color-soft: #161616;     /* Carbón: tarjetas y secciones alternas */
+  --color-line: #2a2a2a;     /* Grafito: líneas finas y bordes */
+  --color-steel: #5b5b5b;    /* Acero: solo decorativo, no para texto */
+  --color-muted: #a2a2a2;    /* Niebla: texto secundario */
+  --color-ink: #dfdfdf;      /* Plata: texto */
+  --color-light: #fbfbfb;    /* Luz: títulos y acentos */
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-paper text-ink font-sans font-light antialiased;
+  }
+  ::selection {
+    @apply bg-light text-paper;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-4 outline-light;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Etiqueta pequeña en mayúsculas muy espaciadas (como en el manual). */
+  .etiqueta {
+    @apply text-xs font-normal tracking-[0.3em] text-muted uppercase;
+  }
+  /* Títulos anchos: Saira al 125 % de ancho. */
+  .titulo {
+    font-stretch: 125%;
+    @apply font-light tracking-wide text-light;
+  }
+}
+
+@utility brillo {
+  filter: drop-shadow(0 0 2px rgb(255 255 255 / 0.6)) drop-shadow(0 0 22px rgb(255 255 255 / 0.22));
+}

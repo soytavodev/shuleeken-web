@@ -1,0 +1,18 @@
+---
+// Iconos oficiales de cada red, de simple-icons (licencia CC0).
+// Solo se importan los que usamos: en la web final quedan como SVG dentro del HTML.
+import { siYoutube, siTwitch, siTiktok, siInstagram, siFacebook } from 'simple-icons';
+import type { RedSocial } from '../data/site';
+
+interface Props {
+  red: RedSocial['id'];
+  class?: string;
+}
+
+const { red, class: clase } = Astro.props;
+const iconos = { youtube: siYoutube, twitch: siTwitch, tiktok: siTiktok, instagram: siInstagram, facebook: siFacebook };
+---
+
+<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false" class={clase}>
+  <path d={iconos[red].path} />
+</svg>

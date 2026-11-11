@@ -1,0 +1,41 @@
+---
+// Página legal MÍNIMA y genérica. Las obligaciones cambian según el país
+// (España: LSSI y RGPD; Chile: Ley 19.628 y Ley 21.719...). Antes de publicar,
+// revisar qué exige el país del cliente: aquí no se da asesoría legal.
+// Los datos salen de site.legal; si faltan, se ve el hueco [PENDIENTE].
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+
+const pending = (value: string | null) => value ?? '[PENDIENTE]';
+---
+
+<Base title="Información legal">
+  <article class="mx-auto max-w-3xl px-4 pt-32 pb-20 [&_h2]:mt-10 [&_h2]:text-xl [&_h2]:font-medium [&_h2]:text-light [&_p]:mt-3 [&_p]:text-muted">
+    <h1 class="titulo text-3xl">Información legal</h1>
+
+    <h2>Titular de la web</h2>
+    <p>Titular: {pending(site.legal.owner)}</p>
+    <p>{site.legal.taxIdLabel}: {pending(site.legal.taxId)}</p>
+    <p>Dirección: {pending(site.legal.address)}</p>
+    <p>País: {site.legal.country}</p>
+    {site.contact.email && <p>Correo: {site.contact.email}</p>}
+
+    <h2>Datos personales</h2>
+    <p>
+      Esta web no tiene formularios ni guarda datos de los visitantes. Si escribes al correo,
+      tus datos se usan solo para responderte.
+    </p>
+
+    <h2>Enlaces a otras webs</h2>
+    <p>
+      Los enlaces a YouTube, Twitch, TikTok, Instagram y Facebook llevan a esas plataformas, que tienen sus
+      propias condiciones y políticas de privacidad.
+    </p>
+
+    <h2>Cookies</h2>
+    <p>Esta web no usa cookies propias ni de terceros.</p>
+
+    <h2>Propiedad de la marca</h2>
+    <p>El nombre Shuleeken, el logotipo, el icono y el guerrero son propiedad de su titular y no se pueden usar sin permiso.</p>
+  </article>
+</Base>

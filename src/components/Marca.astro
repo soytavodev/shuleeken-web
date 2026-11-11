@@ -1,0 +1,31 @@
+---
+// Las piezas de la marca (icono, guerrero, nombre) en SVG, incrustadas en el
+// HTML para que tomen el color del texto (currentColor) y no hagan peticiones extra.
+// Los originales están en el repositorio de identidad; aquí van copias.
+import icono from '../assets/marca/icono.svg?raw';
+import guerrero from '../assets/marca/guerrero.svg?raw';
+import nombre from '../assets/marca/nombre.svg?raw';
+
+interface Props {
+  pieza: 'icono' | 'guerrero' | 'nombre';
+  class?: string;
+  /** Texto alternativo. Si no se da, la pieza es decorativa. */
+  alt?: string;
+}
+
+const { pieza, class: clase = '', alt } = Astro.props;
+const fuentes = { icono, guerrero, nombre };
+
+// Los archivos vienen en negro: se cambia por currentColor y se quitan
+// los atributos que pondremos nosotros.
+const svg = fuentes[pieza]
+  .replaceAll('#0a0a0a', 'currentColor')
+  .replace(/\s(role|aria-label)="[^"]*"/g, '')
+  .replace(
+    '<svg ',
+    alt ? `<svg role="img" aria-label="${alt}" ` : '<svg aria-hidden="true" focusable="false" ',
+  )
+  .replace(/<!--[\s\S]*?-->/g, '');
+---
+
+<span class:list={['block [&>svg]:h-full [&>svg]:w-full', clase]} set:html={svg} />

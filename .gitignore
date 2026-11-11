@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.astro/
+.wrangler/
+.env
+.env.*
+# Fotos originales del cliente: fuera del repositorio
+fotos-originales/
