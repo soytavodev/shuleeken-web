@@ -52,6 +52,11 @@
   }
 }
 
+/* Resplandor tenue al pasar el cursor (logo de la cabecera, iconos de las redes). */
+@utility resplandor {
+  filter: drop-shadow(0 0 6px rgb(255 255 255 / 0.5)) drop-shadow(0 0 14px rgb(255 255 255 / 0.2));
+}
+
 @utility brillo {
   filter: drop-shadow(0 0 2px rgb(255 255 255 / 0.6)) drop-shadow(0 0 22px rgb(255 255 255 / 0.22));
 }

@@ -11,9 +11,11 @@ interface Props {
   class?: string;
   /** Texto alternativo. Si no se da, la pieza es decorativa. */
   alt?: string;
+  /** Marca el elemento para la animación de entrada (ver Intro.astro). */
+  'data-aparece'?: boolean;
 }
 
-const { pieza, class: clase = '', alt } = Astro.props;
+const { pieza, class: clase = '', alt, ...resto } = Astro.props;
 const fuentes = { icono, guerrero, nombre };
 
 // Los archivos vienen en negro: se cambia por currentColor y se quitan
@@ -28,4 +30,4 @@ const svg = fuentes[pieza]
   .replace(/<!--[\s\S]*?-->/g, '');
 ---
 
-<span class:list={['block [&>svg]:h-full [&>svg]:w-full', clase]} set:html={svg} />
+<span {...resto} class:list={['block [&>svg]:h-full [&>svg]:w-full', clase]} set:html={svg} />

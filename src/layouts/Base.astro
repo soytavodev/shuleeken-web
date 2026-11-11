@@ -7,15 +7,18 @@ import '../styles/global.css';
 import { site } from '../data/site';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Intro from '../components/Intro.astro';
 
 interface Props {
   title?: string;
   description?: string;
   /** Ruta de la imagen para compartir dentro de public/ (1200×630). */
   image?: string;
+  /** Animación de entrada (solo en la portada). */
+  intro?: boolean;
 }
 
-const { title, description = site.description, image = '/og-image.jpg' } = Astro.props;
+const { title, description = site.description, image = '/og-image.jpg', intro = false } = Astro.props;
 // Siempre empieza por el nombre del negocio; en la portada le sigue el lema.
 const fullTitle = `${site.name} | ${title ?? site.tagline}`;
 
@@ -34,6 +37,17 @@ const ogImage = baseUrl ? new URL(image, baseUrl).href : null;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#0a0a0a" />
+    {intro && (
+      <script is:inline>
+        // Decide antes de pintar si se muestra la entrada (ver Intro.astro).
+        try {
+          if (!matchMedia('(prefers-reduced-motion: reduce)').matches && !sessionStorage.getItem('intro-vista')) {
+            sessionStorage.setItem('intro-vista', '1');
+            document.documentElement.classList.add('con-intro');
+          }
+        } catch (e) {}
+      </script>
+    )}
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     {!indexable && <meta name="robots" content="noindex, nofollow" />}
@@ -53,6 +67,7 @@ const ogImage = baseUrl ? new URL(image, baseUrl).href : null;
     <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
+    {intro && <Intro />}
     <a
       href="#contenido"
       class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded focus:bg-light focus:text-paper focus:px-4 focus:py-2"

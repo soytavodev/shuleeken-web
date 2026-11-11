@@ -1,0 +1,109 @@
+---
+// Animación de entrada: la página en negro, el icono se enciende poco a poco
+// (con un parpadeo, como algo que arranca) y un fogonazo de luz abre la web.
+//
+// Reglas para que no moleste:
+// - Solo la primera vez en cada visita (sessionStorage). Si recargas o vuelves
+//   desde otra página, entras directo.
+// - No sale si el sistema pide reducir el movimiento (accesibilidad), ni si
+//   no hay JavaScript: sin la clase .con-intro en <html> el velo no existe.
+// - Se puede saltar con un clic, un toque o cualquier tecla.
+//
+// La clase .con-intro la pone un script en el <head> (ver Base.astro), antes
+// de que se pinte nada: así no se ve la web un instante antes del negro.
+import Marca from './Marca.astro';
+---
+
+<div class="intro" aria-hidden="true" data-intro>
+  <Marca pieza="icono" class="intro-icono" />
+  <div class="intro-fogonazo"></div>
+</div>
+
+<script>
+  const raiz = document.documentElement;
+  const velo = document.querySelector<HTMLElement>('[data-intro]');
+
+  function terminar() {
+    raiz.classList.remove('con-intro');
+    velo?.remove();
+  }
+
+  if (raiz.classList.contains('con-intro') && velo) {
+    // El velo termina de desvanecerse a los 2,5 s desde que empezó a cargar la página.
+    window.setTimeout(terminar, Math.max(0, 2500 - performance.now()));
+    velo.addEventListener('click', terminar);
+    window.addEventListener('keydown', terminar, { once: true });
+    window.addEventListener('touchstart', terminar, { once: true, passive: true });
+  } else {
+    velo?.remove();
+  }
+</script>
+
+<style is:global>
+  .intro { display: none; }
+
+  html.con-intro body { overflow: hidden; }
+
+  html.con-intro .intro {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    background: #0a0a0a;
+    cursor: pointer;
+    animation: intro-salir 0.65s ease-out 1.85s forwards;
+  }
+
+  .intro-icono {
+    width: 7rem;
+    height: 7rem;
+    color: #fbfbfb;
+    opacity: 0;
+    animation: intro-encender 1.9s ease-in forwards;
+  }
+
+  /* El icono pasa de apagado (gris oscuro) a encendido, con un parpadeo. */
+  @keyframes intro-encender {
+    0%   { opacity: 0;   color: #161616; filter: none; transform: scale(0.96); }
+    25%  { opacity: 1;   color: #2a2a2a; filter: none; }
+    45%  { color: #5b5b5b; filter: drop-shadow(0 0 2px rgb(255 255 255 / 0.15)); }
+    52%  { color: #fbfbfb; filter: drop-shadow(0 0 4px rgb(255 255 255 / 0.9)) drop-shadow(0 0 30px rgb(255 255 255 / 0.5)); }
+    56%  { color: #8a8a8a; filter: drop-shadow(0 0 2px rgb(255 255 255 / 0.3)); }
+    62%  { color: #fbfbfb; filter: drop-shadow(0 0 4px rgb(255 255 255 / 0.9)) drop-shadow(0 0 34px rgb(255 255 255 / 0.55)); }
+    100% { opacity: 1;   color: #fbfbfb; filter: drop-shadow(0 0 6px rgb(255 255 255 / 1)) drop-shadow(0 0 60px rgb(255 255 255 / 0.7)); transform: scale(1.06); }
+  }
+
+  /* Fogonazo: una luz que sale del icono y llena la pantalla un instante.
+     Un solo destello suave (no parpadea) para no molestar a nadie sensible a la luz. */
+  .intro-fogonazo {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at 50% 50%, rgb(255 255 255 / 0.95) 0%, rgb(255 255 255 / 0.55) 22%, rgb(255 255 255 / 0) 60%);
+    opacity: 0;
+    transform: scale(0.15);
+    animation: intro-fogonazo 0.8s ease-out 1.6s forwards;
+  }
+
+  @keyframes intro-fogonazo {
+    0%   { opacity: 0;    transform: scale(0.15); }
+    25%  { opacity: 0.85; }
+    100% { opacity: 0;    transform: scale(3); }
+  }
+
+  @keyframes intro-salir {
+    to { opacity: 0; visibility: hidden; }
+  }
+
+  /* Al abrirse, el guerrero aparece desde la luz. */
+  html.con-intro [data-aparece] {
+    opacity: 0;
+    animation: intro-aparecer 0.9s ease-out 1.95s forwards;
+  }
+
+  @keyframes intro-aparecer {
+    from { opacity: 0; transform: scale(0.97); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+</style>
